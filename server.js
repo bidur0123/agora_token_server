@@ -14,21 +14,26 @@ app.get('/access_token', (req, res) => {
     return res.status(400).json({ error: 'Channel name is required' });
   }
 
-  // temporary token with channel name
-  const uid = 0; 
-  const role = RtcRole.PUBLISHER;
-  const expirationTimeInSeconds = 3600; 
+  try {
+    //  temporary token with the specified channel name
+    const uid = 0;
+    const role = RtcRole.PUBLISHER;
+    const expirationTimeInSeconds = 3600;
 
-  const token = RtcTokenBuilder.buildTokenWithUid(
-    APP_ID,
-    APP_CERTIFICATE,
-    channelName,
-    uid,
-    role,
-    expirationTimeInSeconds
-  );
+    const token = RtcTokenBuilder.buildTokenWithUid(
+      APP_ID,
+      APP_CERTIFICATE,
+      channelName,
+      uid,
+      role,
+      expirationTimeInSeconds
+    );
 
-  res.json({ token });
+    res.json({ token });
+  } catch (error) {
+    console.error('Error generating token:', error);
+    res.status(500).json({ error: 'Failed to generate token' });
+  }
 });
 
 app.listen(PORT, () => {
